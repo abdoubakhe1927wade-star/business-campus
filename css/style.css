@@ -1,0 +1,7 @@
+body { font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
+.product-card:hover { transform: translateY(-8px); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.hidden-section { display: none; }
+.gradient-bg { background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); }
+.category-pill.active { background-color: #2563eb; color: white; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }

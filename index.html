@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Business Campus - Le Marché des Étudiants</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1046/1046771.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center cursor-pointer group" onclick="showSection('home')">
+                        <div class="bg-blue-600 p-2 rounded-lg mr-3 group-hover:rotate-12 transition-transform">
+                            <i class="fas fa-graduation-cap text-white text-2xl"></i>
+                        </div>
+                        <span class="text-2xl font-black text-gray-900 tracking-tight">BUSINESS <span class="text-blue-600">CAMPUS</span></span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleCart()" class="md:hidden relative p-2 text-gray-600 hover:text-blue-600 transition">
+                        <i class="fas fa-shopping-basket text-xl"></i>
+                        <span id="cart-count-mobile" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">0</span>
+                    </button>
+                    <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-gray-600 hover:text-blue-600 transition">
+                        <i id="mobile-menu-icon" class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-8">
+                    <button onclick="showSection('home')" class="text-gray-600 hover:text-blue-600 font-semibold transition">Accueil</button>
+                    <button onclick="showSection('search')" class="text-gray-600 hover:text-blue-600 font-semibold transition">Explorer</button>
+                    <button onclick="checkAuth('publish')" class="bg-blue-50 text-blue-600 px-4 py-2 rounded-lg font-bold hover:bg-blue-100 transition">Vendre un article</button>
+                    
+                    <div class="h-6 w-px bg-gray-200"></div>
+                    
+                    <div id="auth-buttons" class="flex items-center space-x-4">
+                        <button onclick="showSection('login')" class="text-gray-700 hover:text-blue-600 font-semibold transition">Connexion</button>
+                        <button onclick="showSection('register')" class="bg-blue-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition">S'inscrire</button>
+                    </div>
+                    
+                    <div id="user-profile" class="hidden flex items-center space-x-4">
+                        <div class="flex flex-col items-end">
+                            <span id="user-name-display" class="font-bold text-gray-900 leading-tight"></span>
+                            <span class="text-[10px] text-blue-600 font-bold uppercase tracking-wider">Étudiant Vérifié</span>
+                        </div>
+                        <div class="relative group">
+                            <button onclick="toggleUserMenu()" class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center border-2 border-transparent hover:border-blue-600 transition">
+                                <i class="fas fa-user text-gray-600"></i>
+                            </button>
+                            <!-- Dropdown simulation -->
+                            <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2">
+                                <button onclick="logout()" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-semibold transition">
+                                    <i class="fas fa-sign-out-alt mr-2"></i> Déconnexion
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button onclick="toggleCart()" class="relative p-2 text-gray-600 hover:text-blue-600 transition">
+                        <i class="fas fa-shopping-basket text-xl"></i>
+                        <span id="cart-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-white z-[60] transform translate-x-full transition-transform duration-300 md:hidden flex flex-col p-8 pt-24 space-y-6">
+        <button onclick="showSection('home'); toggleMobileMenu()" class="text-2xl font-black text-gray-900 flex items-center">
+            <i class="fas fa-home mr-4 text-blue-600"></i> Accueil
+        </button>
+        <button onclick="showSection('search'); toggleMobileMenu()" class="text-2xl font-black text-gray-900 flex items-center">
+            <i class="fas fa-search mr-4 text-blue-600"></i> Explorer
+        </button>
+        <button onclick="checkAuth('publish'); toggleMobileMenu()" class="text-2xl font-black text-gray-900 flex items-center">
+            <i class="fas fa-plus-circle mr-4 text-blue-600"></i> Vendre
+        </button>
+        <div class="h-px bg-gray-100 my-4"></div>
+        <div id="auth-buttons-mobile" class="flex flex-col space-y-4">
+            <button onclick="showSection('login'); toggleMobileMenu()" class="text-xl font-bold text-gray-700">Connexion</button>
+            <button onclick="showSection('register'); toggleMobileMenu()" class="bg-blue-600 text-white px-6 py-4 rounded-2xl font-black text-center shadow-xl shadow-blue-200">S'inscrire</button>
+        </div>
+        <div id="user-profile-mobile" class="hidden flex flex-col space-y-4">
+            <div class="flex items-center space-x-4 p-4 bg-blue-50 rounded-2xl">
+                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-blue-600 shadow-sm">
+                    <i class="fas fa-user text-xl"></i>
+                </div>
+                <div>
+                    <p id="user-name-mobile" class="font-black text-gray-900"></p>
+                    <p class="text-[10px] text-blue-600 font-bold uppercase tracking-wider">Étudiant Vérifié</p>
+                </div>
+            </div>
+            <button onclick="logout(); toggleMobileMenu()" class="text-xl font-bold text-red-600 flex items-center">
+                <i class="fas fa-sign-out-alt mr-4"></i> Déconnexion
+            </button>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <header id="hero-section" class="gradient-bg text-white pt-24 pb-32 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <svg class="h-full w-full" fill="currentColor" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <path d="M0 100 C 20 0 50 0 100 100 Z"></path>
+            </svg>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <span class="inline-block bg-white/20 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-sm font-bold mb-6 tracking-wide uppercase">🚀 Le Futur du Commerce Étudiant</span>
+            <h1 class="text-5xl md:text-7xl font-black mb-8 leading-tight">Vendez, Achetez, <br><span class="text-blue-200">Réussissez.</span></h1>
+            <p class="text-xl opacity-90 mb-12 max-w-2xl mx-auto font-medium">La plateforme exclusive pour échanger vos articles, livres et services au sein du campus Business Campus.</p>
+            
+            <div class="max-w-3xl mx-auto relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-blue-400 to-indigo-400 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                <div class="relative flex bg-white rounded-2xl p-2 shadow-2xl">
+                    <input type="text" id="main-search" placeholder="Que recherchez-vous aujourd'hui ? (ex: Laptop, Livres L2...)" class="flex-grow px-6 py-4 rounded-xl text-gray-800 focus:outline-none text-lg">
+                    <button onclick="performSearch()" class="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition flex items-center space-x-2">
+                        <i class="fas fa-search"></i>
+                        <span>Rechercher</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-20 pb-20">
+        
+        <!-- Section Accueil -->
+        <section id="home-section" class="animate-fade-in">
+            <!-- Categories -->
+            <div class="flex flex-wrap justify-center gap-3 mb-12">
+                <button onclick="filterCategory('All')" class="category-pill active px-6 py-3 rounded-full bg-white shadow-sm font-bold text-gray-700 hover:shadow-md transition">Tous</button>
+                <button onclick="filterCategory('Électronique')" class="category-pill px-6 py-3 rounded-full bg-white shadow-sm font-bold text-gray-700 hover:shadow-md transition">Électronique</button>
+                <button onclick="filterCategory('Livres / Études')" class="category-pill px-6 py-3 rounded-full bg-white shadow-sm font-bold text-gray-700 hover:shadow-md transition">Livres</button>
+                <button onclick="filterCategory('Vêtements')" class="category-pill px-6 py-3 rounded-full bg-white shadow-sm font-bold text-gray-700 hover:shadow-md transition">Vêtements</button>
+                <button onclick="filterCategory('Services')" class="category-pill px-6 py-3 rounded-full bg-white shadow-sm font-bold text-gray-700 hover:shadow-md transition">Services</button>
+                <button onclick="filterCategory('Autres')" class="category-pill px-6 py-3 rounded-full bg-white shadow-sm font-bold text-gray-700 hover:shadow-md transition">Autres</button>
+            </div>
+
+            <div class="flex justify-between items-end mb-8 border-b border-gray-200 pb-6">
+                <div>
+                    <h2 class="text-3xl font-black text-gray-900">Articles Récents</h2>
+                    <p class="text-gray-500 font-medium">Découvrez les pépites de vos camarades</p>
+                </div>
+                <div class="hidden sm:flex space-x-4">
+                    <div class="flex items-center space-x-2 text-sm font-bold text-gray-400">
+                        <span class="w-3 h-3 bg-green-500 rounded-full"></span>
+                        <span>154 Étudiants en ligne</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Produits injectés par JS -->
+            </div>
+        </section>
+
+        <!-- Section Recherche -->
+        <section id="search-section" class="hidden-section animate-fade-in">
+            <div class="bg-white p-8 rounded-3xl shadow-xl mb-12">
+                <h2 class="text-3xl font-black text-gray-900 mb-6">Exploration Avancée</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Mot-clé</label>
+                        <input type="text" id="search-input" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Nom, description...">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Catégorie</label>
+                        <select id="search-cat" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
+                            <option value="All">Toutes les catégories</option>
+                            <option>Électronique</option>
+                            <option>Livres / Études</option>
+                            <option>Vêtements</option>
+                            <option>Services</option>
+                            <option>Autres</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button onclick="performSearch()" class="w-full bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition">Appliquer les filtres</button>
+                    </div>
+                </div>
+            </div>
+            <div id="search-results" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Résultats -->
+            </div>
+        </section>
+
+        <!-- Section Connexion -->
+        <section id="login-section" class="hidden-section animate-fade-in max-w-md mx-auto bg-white p-10 rounded-3xl shadow-2xl border border-gray-100">
+            <div class="text-center mb-10">
+                <div class="w-20 h-20 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-lock text-blue-600 text-3xl"></i>
+                </div>
+                <h2 class="text-3xl font-black text-gray-900">Ravi de vous revoir !</h2>
+                <p class="text-gray-500 mt-2">Connectez-vous à votre espace campus</p>
+            </div>
+            <form id="login-form" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Numéro de téléphone</label>
+                    <input type="tel" id="login-phone" required class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="01 02 03 04 05">
+                </div>
+                <div>
+                    <div class="flex justify-between mb-2">
+                        <label class="text-sm font-bold text-gray-700">Mot de passe</label>
+                        <a href="#" class="text-xs text-blue-600 font-bold hover:underline">Oublié ?</a>
+                    </div>
+                    <input type="password" required class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition" value="password123">
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold hover:bg-blue-700 shadow-xl shadow-blue-100 transition transform active:scale-[0.98]">Connexion Immédiate</button>
+            </form>
+            <div class="mt-10 text-center border-t border-gray-100 pt-8">
+                <p class="text-gray-600">Nouveau sur Business Campus ? <button onclick="showSection('register')" class="text-blue-600 font-black hover:underline ml-1">Rejoignez-nous</button></p>
+            </div>
+        </section>
+
+        <!-- Section Inscription -->
+        <section id="register-section" class="hidden-section animate-fade-in max-w-xl mx-auto bg-white p-10 rounded-3xl shadow-2xl border border-gray-100">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-black text-gray-900">Créer un Compte Étudiant</h2>
+                <p class="text-gray-500 mt-2">Rejoignez la plus grande communauté de vente du campus</p>
+            </div>
+            <form id="register-form" class="space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Nom</label>
+                        <input type="text" id="reg-lastname" required class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="Ex: Koffi">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Prénom</label>
+                        <input type="text" id="reg-firstname" required class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="Ex: Jean">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Numéro de téléphone</label>
+                    <input type="tel" id="reg-phone" required class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="01 02 03 04 05">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Classe / Filière</label>
+                        <input type="text" id="reg-class" required class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="Ex: Informatique">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Niveau d'étude</label>
+                        <select id="reg-level" class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none appearance-none">
+                            <option>Licence 1</option>
+                            <option>Licence 2</option>
+                            <option>Licence 3</option>
+                            <option>Master 1</option>
+                            <option>Master 2</option>
+                            <option>Doctorat</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold hover:bg-blue-700 shadow-xl shadow-blue-100 transition transform active:scale-[0.98]">Confirmer l'inscription</button>
+            </form>
+            <div class="mt-10 text-center border-t border-gray-100 pt-8">
+                <p class="text-gray-600">Déjà inscrit ? <button onclick="showSection('login')" class="text-blue-600 font-black hover:underline ml-1">Connectez-vous</button></p>
+            </div>
+        </section>
+
+        <!-- Section Publication -->
+        <section id="publish-section" class="hidden-section animate-fade-in max-w-2xl mx-auto bg-white p-10 rounded-3xl shadow-2xl border border-gray-100">
+            <div class="flex items-center space-x-4 mb-10">
+                <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center text-white text-2xl">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div>
+                    <h2 class="text-3xl font-black text-gray-900">Vendre un article</h2>
+                    <p class="text-gray-500">Remplissez les détails de votre produit</p>
+                </div>
+            </div>
+            <form id="publish-form" class="space-y-8">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Titre de l'annonce</label>
+                    <input type="text" id="pub-title" required class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="Ex: MacBook Pro 2020 en parfait état">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Prix (CFA)</label>
+                        <div class="relative">
+                            <input type="number" id="pub-price" required class="w-full pl-12 pr-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="0">
+                            <span class="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 font-bold">F</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Catégorie</label>
+                        <select id="pub-category" class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none appearance-none">
+                            <option>Livres / Études</option>
+                            <option>Électronique</option>
+                            <option>Vêtements</option>
+                            <option>Services</option>
+                            <option>Autres</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Description détaillée</label>
+                    <textarea id="pub-desc" rows="4" required class="w-full px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="Décrivez l'état, les caractéristiques, etc."></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Image (URL Unsplash)</label>
+                    <div class="flex space-x-4">
+                        <input type="url" id="pub-image" class="flex-grow px-5 py-4 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition" placeholder="https://images.unsplash.com/...">
+                        <button type="button" onclick="randomizeImage()" class="bg-gray-100 px-6 rounded-2xl text-gray-600 hover:bg-gray-200 transition"><i class="fas fa-random"></i></button>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2 italic">* Simulation : Utilisez une URL d'image web ou laissez vide pour une image aléatoire.</p>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-lg hover:bg-blue-700 shadow-xl shadow-blue-100 transition transform active:scale-[0.98]">Publier mon annonce</button>
+            </form>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-100 py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-blue-600 p-2 rounded-lg mr-3">
+                            <i class="fas fa-graduation-cap text-white text-xl"></i>
+                        </div>
+                        <span class="text-xl font-black text-gray-900 tracking-tight">BUSINESS <span class="text-blue-600">CAMPUS</span></span>
+                    </div>
+                    <p class="text-gray-500 text-lg max-w-md leading-relaxed">La plateforme n°1 pour l'entrepreneuriat étudiant. Conçue par des étudiants, pour les étudiants, afin de dynamiser l'économie circulaire au sein du campus.</p>
+                    <div class="flex space-x-6 mt-8">
+                        <a href="#" class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition shadow-sm"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-12 h-12 bg-pink-50 rounded-full flex items-center justify-center text-pink-600 hover:bg-pink-600 hover:text-white transition shadow-sm"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-green-600 hover:bg-green-600 hover:text-white transition shadow-sm"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-gray-900 font-black mb-6 uppercase tracking-wider text-sm">Navigation</h3>
+                    <ul class="space-y-4 font-bold text-gray-500">
+                        <li><button onclick="showSection('home')" class="hover:text-blue-600 transition">Accueil</button></li>
+                        <li><button onclick="showSection('search')" class="hover:text-blue-600 transition">Explorer les articles</button></li>
+                        <li><button onclick="checkAuth('publish')" class="hover:text-blue-600 transition">Publier une annonce</button></li>
+                        <li><button onclick="showSection('login')" class="hover:text-blue-600 transition">Espace membre</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-gray-900 font-black mb-6 uppercase tracking-wider text-sm">Support</h3>
+                    <ul class="space-y-4 font-bold text-gray-500">
+                        <li><a href="#" class="hover:text-blue-600 transition">Centre d'aide</a></li>
+                        <li><a href="#" class="hover:text-blue-600 transition">Règles de sécurité</a></li>
+                        <li><a href="#" class="hover:text-blue-600 transition">Nous contacter</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-20 pt-10 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center text-gray-400 font-bold text-sm">
+                <p>&copy; 2026 Business Campus. Tous droits réservés.</p>
+                <div class="flex space-x-8 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-gray-600">Mentions Légales</a>
+                    <a href="#" class="hover:text-gray-600">Confidentialité</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full md:w-96 bg-white shadow-2xl z-[100] transform translate-x-full transition-transform duration-500 ease-in-out border-l border-gray-100 flex flex-col">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+            <h2 class="text-2xl font-black text-gray-900">Votre Panier <span id="cart-items-count" class="text-blue-600">(0)</span></h2>
+            <button onclick="toggleCart()" class="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-gray-500 hover:text-red-500 transition"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="cart-content" class="flex-grow overflow-y-auto p-6 space-y-4">
+            <!-- Items panier -->
+            <div class="text-center py-20 text-gray-400">
+                <i class="fas fa-shopping-basket text-6xl mb-4 opacity-20"></i>
+                <p class="font-bold">Votre panier est vide</p>
+                <button onclick="toggleCart()" class="mt-4 text-blue-600 font-black hover:underline">Continuer mes achats</button>
+            </div>
+        </div>
+        <div class="p-6 border-t border-gray-100 bg-gray-50">
+            <div class="flex justify-between text-xl font-black text-gray-900 mb-6">
+                <span>Total</span>
+                <span id="cart-total">0 CFA</span>
+            </div>
+            <button onclick="simulateCheckout()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-lg hover:bg-blue-700 shadow-xl shadow-blue-100 transition">Passer à la commande</button>
+        </div>
+    </div>
+    <div id="cart-overlay" onclick="toggleCart()" class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-[90]"></div>
+
+    <!-- Product Modal -->
+    <div id="product-modal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4 sm:p-6">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-md" onclick="closeProductModal()"></div>
+        <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl relative z-[120] overflow-hidden flex flex-col md:flex-row max-h-[90vh]">
+            <div class="w-full md:w-1/2 h-64 md:h-auto relative">
+                <img id="modal-img" src="" class="w-full h-full object-cover">
+                <div id="modal-cat" class="absolute top-6 left-6 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest shadow-xl"></div>
+            </div>
+            <div class="w-full md:w-1/2 p-8 md:p-12 overflow-y-auto">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h2 id="modal-title" class="text-3xl font-black text-gray-900 mb-2 leading-tight"></h2>
+                        <p id="modal-price" class="text-2xl font-black text-blue-600"></p>
+                    </div>
+                    <button onclick="closeProductModal()" class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400 hover:text-red-500 transition"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="bg-gray-50 p-6 rounded-2xl mb-8">
+                    <h3 class="font-black text-gray-900 mb-3 text-sm uppercase tracking-wider">Description</h3>
+                    <p id="modal-desc" class="text-gray-600 leading-relaxed"></p>
+                </div>
+                <div class="flex items-center p-6 bg-blue-50 rounded-2xl mb-8">
+                    <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-blue-600 mr-4 shadow-sm">
+                        <i class="fas fa-user-graduate text-2xl"></i>
+                    </div>
+                    <div>
+                        <p id="modal-seller" class="font-black text-gray-900"></p>
+                        <p id="modal-level" class="text-sm font-bold text-blue-600 uppercase tracking-wide"></p>
+                    </div>
+                </div>
+                <div class="flex space-x-4">
+                    <button id="modal-add-cart" class="flex-grow bg-blue-600 text-white py-5 rounded-2xl font-black hover:bg-blue-700 shadow-xl shadow-blue-100 transition flex items-center justify-center space-x-3">
+                        <i class="fas fa-cart-plus"></i>
+                        <span>Ajouter au panier</span>
+                    </button>
+                    <button id="modal-contact" class="w-16 bg-green-500 text-white rounded-2xl flex items-center justify-center text-xl hover:bg-green-600 transition shadow-xl shadow-green-100">
+                        <i class="fab fa-whatsapp"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Paiement -->
+    <div id="payment-modal" class="hidden fixed inset-0 z-[150] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-md" onclick="closePaymentModal()"></div>
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl relative z-[160] overflow-hidden animate-fade-in">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-2xl font-black text-gray-900">Paiement</h2>
+                    <button onclick="closePaymentModal()" class="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400 hover:text-red-500 transition">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="bg-blue-50 p-6 rounded-2xl mb-8 text-center">
+                    <p class="text-blue-600 font-bold text-sm uppercase tracking-wider mb-1">Total à payer</p>
+                    <p id="payment-total" class="text-3xl font-black text-gray-900">0 CFA</p>
+                </div>
+
+                <div class="space-y-4" id="payment-methods">
+                    <p class="font-black text-gray-900 text-sm uppercase tracking-wider mb-4 text-center">Choisissez votre mode de paiement</p>
+                    
+                    <!-- Wave -->
+                    <button onclick="processPayment('wave')" class="w-full flex items-center justify-between p-5 bg-[#1da1f2]/10 hover:bg-[#1da1f2]/20 rounded-2xl transition border-2 border-transparent hover:border-[#1da1f2] group">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-[#1da1f2] rounded-xl flex items-center justify-center text-white text-2xl shadow-lg shadow-blue-200">
+                                <i class="fas fa-water"></i>
+                            </div>
+                            <span class="font-black text-gray-900">Wave</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-300 group-hover:text-[#1da1f2] transition"></i>
+                    </button>
+
+                    <!-- Orange Money -->
+                    <button onclick="processPayment('om')" class="w-full flex items-center justify-between p-5 bg-[#ff7900]/10 hover:bg-[#ff7900]/20 rounded-2xl transition border-2 border-transparent hover:border-[#ff7900] group">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-[#ff7900] rounded-xl flex items-center justify-center text-white text-2xl shadow-lg shadow-orange-200">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <span class="font-black text-gray-900">Orange Money</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-300 group-hover:text-[#ff7900] transition"></i>
+                    </button>
+                </div>
+
+                <!-- Zone de Simulation -->
+                <div id="payment-simulation" class="hidden text-center py-8">
+                    <div id="sim-loader" class="relative w-24 h-24 mx-auto mb-6">
+                        <div class="absolute inset-0 border-4 border-gray-100 rounded-full"></div>
+                        <div id="sim-spinner" class="absolute inset-0 border-4 border-blue-600 rounded-full border-t-transparent animate-spin"></div>
+                        <div id="sim-check" class="hidden absolute inset-0 flex items-center justify-center text-4xl text-green-500 animate-fade-in">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <h3 id="sim-title" class="text-xl font-black text-gray-900 mb-2">Traitement en cours...</h3>
+                    <p id="sim-msg" class="text-gray-500 font-medium px-4">Veuillez valider la transaction sur votre téléphone.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-8 py-4 rounded-2xl shadow-2xl transform translate-y-32 transition-transform duration-500 z-[200] flex items-center space-x-4 min-w-[320px]">
+        <div id="notif-icon" class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"></div>
+        <span id="notification-msg" class="font-bold"></span>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "Business Campus",
+  "short_name": "Campus",
+  "description": "Le Marché des Étudiants du Business Campus",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1046/1046771.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
